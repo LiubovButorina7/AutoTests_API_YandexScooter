@@ -1,5 +1,6 @@
 package ru.practicum.tests;
 
+import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
 import org.junit.After;
@@ -11,6 +12,7 @@ import ru.practicum.config.RestConfig;
 import ru.practicum.models.Order;
 import ru.practicum.steps.OrderSteps;
 import static org.hamcrest.Matchers.notNullValue;
+import org.apache.http.HttpStatus;
 
 @RunWith(Parameterized.class)
 public class CreateOrderTest extends BaseTest {
@@ -26,7 +28,7 @@ public class CreateOrderTest extends BaseTest {
         this.colorName = colorName;
     }
 
-    @Parameterized.Parameters(name = "Тестовые данные - цвет: {1} ")
+    @Parameterized.Parameters(name = "Create order with color: {1} ")
     public static Object[][] getTestData() {
         return new Object[][] {
                 { new String[]{"BLACK"}, "BLACK" },
@@ -51,10 +53,11 @@ public class CreateOrderTest extends BaseTest {
     }
 
     @Test
+    @Description("Test for '/api/v1/orders' endpoint")
     public void testCreateOrderReturnsTrack() {
         ValidatableResponse response = orderSteps.createOrder(order);
         getResponseTrack(response);
-        checkCodeResponse(response, RestConfig.CODE_CREATE_SUCCESS);
+        checkCodeResponse(response, HttpStatus.SC_CREATED);
         checkBodyResponse(response, RestConfig.KEY_ORDER);
     }
 

@@ -1,5 +1,6 @@
 package ru.practicum.tests;
 
+import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
@@ -11,6 +12,7 @@ import ru.practicum.config.RestConfig;
 import ru.practicum.models.Courier;
 import ru.practicum.steps.CourierSteps;
 import static org.hamcrest.Matchers.*;
+import org.apache.http.HttpStatus;
 
 public class LoginCourierTests extends BaseTest {
     private final CourierSteps courierSteps = new CourierSteps();
@@ -29,45 +31,50 @@ public class LoginCourierTests extends BaseTest {
 
     @Test
     @DisplayName("Login courier with existing login and password")
+    @Description("Test for '/api/v1/courier/login' endpoint")
     public void testLoginCourierWithExistingLoginAndPasswordReturnsId() {
         ValidatableResponse response = courierSteps.loginCourier(courier);
-        checkCodeResponse(response, RestConfig.CODE_RESPONSE_SUCCESS);
+        checkCodeResponse(response, HttpStatus.SC_OK);
         checkBodyResponseLoginSuccess(response, RestConfig.KEY_LOGIN_SUCCESS);
     }
 
     @Test
     @DisplayName("Login courier with existing login and not existing password")
+    @Description("Test for '/api/v1/courier/login' endpoint")
     public void testLoginCourierWithExistingLoginAndNotExistingPasswordReturnsFailure() {
         setRequestLoginAndPassword(loginCorrectAuthorized, RandomStringUtils.randomAlphabetic(12));
         ValidatableResponse response = courierSteps.loginCourier(courier);
-        checkCodeResponse(response, RestConfig.CODE_LOGIN_NOT_FOUND);
+        checkCodeResponse(response, HttpStatus.SC_NOT_FOUND);
         checkBodyResponse(response, RestConfig.KEY_FAILURE, RestConfig.VALUE_LOGIN_NOT_FOUND);
     }
 
     @Test
     @DisplayName("Login courier with not existing login and existing password")
+    @Description("Test for '/api/v1/courier/login' endpoint")
     public void testLoginCourierWithNotExistingLoginAndExistingPasswordReturnsFailure() {
         setRequestLoginAndPassword(RandomStringUtils.randomAlphabetic(12), passwordCorrectAuthorized);
         ValidatableResponse response = courierSteps.loginCourier(courier);
-        checkCodeResponse(response, RestConfig.CODE_LOGIN_NOT_FOUND);
+        checkCodeResponse(response, HttpStatus.SC_NOT_FOUND);
         checkBodyResponse(response, RestConfig.KEY_FAILURE, RestConfig.VALUE_LOGIN_NOT_FOUND);
     }
 
     @Test
     @DisplayName("Login courier with login and without password")
+    @Description("Test for '/api/v1/courier/login' endpoint")
     public void testLoginCourierWithLoginAndWithoutPasswordReturnsFailure() throws Exception {
         setRequestLoginAndPassword(loginCorrectAuthorized, null);
         ValidatableResponse response = courierSteps.loginCourier(courier);
-        checkCodeResponse(response, RestConfig.CODE_FAILURE);
+        checkCodeResponse(response, HttpStatus.SC_BAD_REQUEST);
         checkBodyResponse(response, RestConfig.KEY_FAILURE, RestConfig.VALUE_LOGIN_NOT_ALLOWED);
     }
 
     @Test
     @DisplayName("Login courier without login and with password")
+    @Description("Test for '/api/v1/courier/login' endpoint")
     public void testLoginCourierWithoutLoginAndWithPasswordReturnsFailure() {
         setRequestLoginAndPassword(null, passwordCorrectAuthorized);
         ValidatableResponse response = courierSteps.loginCourier(courier);
-        checkCodeResponse(response, RestConfig.CODE_FAILURE);
+        checkCodeResponse(response, HttpStatus.SC_BAD_REQUEST);
         checkBodyResponse(response, RestConfig.KEY_FAILURE, RestConfig.VALUE_LOGIN_NOT_ALLOWED);
     }
 

@@ -2,6 +2,7 @@ package ru.practicum.steps;
 
 import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
+import ru.practicum.config.Endpoints;
 import ru.practicum.models.Courier;
 
 import static io.restassured.RestAssured.given;
@@ -12,7 +13,7 @@ public class CourierSteps {
         return given()
                     .body(courier)
                     .when()
-                    .post("/api/v1/courier")
+                    .post(Endpoints.CREATE_COURIER)
                     .then();
     }
     @Step("Send POST request to /api/v1/courier/login")
@@ -20,7 +21,7 @@ public class CourierSteps {
         return given()
                     .body(courier)
                     .when()
-                    .post("/api/v1/courier/login")
+                    .post(Endpoints.LOGIN_COURIER)
                     .then();
     }
     @Step("Send DELETE request to /api/v1/courier/:id")
@@ -28,7 +29,7 @@ public class CourierSteps {
         given()
             .pathParams("id", courier.getId())
             .when()
-            .delete("/api/v1/courier/{id}")
+            .delete(Endpoints.CREATE_COURIER + "{id}")
             .then();
     }
 }

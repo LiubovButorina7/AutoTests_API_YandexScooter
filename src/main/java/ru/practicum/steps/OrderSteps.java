@@ -2,6 +2,7 @@ package ru.practicum.steps;
 
 import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
+import ru.practicum.config.Endpoints;
 import ru.practicum.models.Order;
 
 import static io.restassured.RestAssured.given;
@@ -13,7 +14,7 @@ public class OrderSteps {
                 .header("Content-type", "application/json")
                 .body(order)
                 .when()
-                .post("/api/v1/orders")
+                .post(Endpoints.CREATE_GET_ORDER)
                 .then();
     }
 
@@ -21,7 +22,7 @@ public class OrderSteps {
     public ValidatableResponse getOrders() {
         return given()
                 .when()
-                .get("/api/v1/orders")
+                .get(Endpoints.CREATE_GET_ORDER)
                 .then();
     }
 
@@ -30,7 +31,7 @@ public class OrderSteps {
         given()
                 .body(order)
                 .when()
-                .put("/api/v1/orders/cancel")
+                .put(Endpoints.CANCEL_ORDER)
                 .then();
     }
 }
